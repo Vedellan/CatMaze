@@ -34,7 +34,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         AssignObjects();
-        MakeRandomMoveKeys();
+        //MakeRandomMoveKeys();
     }
 
     private void Update()
@@ -47,60 +47,63 @@ public class Player : MonoBehaviour
     void Move()
     {
         // https://acredev.tistory.com/18
+        // https://wergia.tistory.com/230
         float horizontal = 0;
         float vertical = 0;
 
-        // 위쪽 이동
+        // 위쪽 이동 (W)
         if (Input.GetKey((KeyCode)moveKeys[0]))
         {
             Debug.Log((KeyCode)moveKeys[0]);
-            horizontal += 1;
+            vertical += 1;
         }
-        // 아래쪽 이동
-        if (Input.GetKey((KeyCode)moveKeys[1]))
-        {
-            Debug.Log((KeyCode)moveKeys[1]);
-            horizontal -= 1;
-        }
-        // 왼쪽 이동
+        // 아래쪽 이동 (S)
         if (Input.GetKey((KeyCode)moveKeys[2]))
         {
-            Debug.Log((KeyCode)moveKeys[2]);
+            Debug.Log((KeyCode)moveKeys[1]);
             vertical -= 1;
         }
-        // 오른쪽 이동
+        // 왼쪽 이동 (A)
+        if (Input.GetKey((KeyCode)moveKeys[1]))
+        {
+            Debug.Log((KeyCode)moveKeys[2]);
+            horizontal -= 1;
+        }
+        // 오른쪽 이동 (D)
         if (Input.GetKey((KeyCode)moveKeys[3]))
         {
             Debug.Log((KeyCode)moveKeys[3]);
-            vertical += 1;
+            horizontal += 1;
         }
 
-        Vector3 lookForward = new(cameraArm.forward.x, 0f, cameraArm.forward.z);
-        Vector3 lookRight = new(cameraArm.right.x, 0f, cameraArm.right.z);
-
-        Vector3 moveDirection = vertical * lookForward + horizontal * lookRight;
-
+        // 점프 로직
         if (characterController.isGrounded)
         {
             yVelocity = 0;
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Space))
             {
                 yVelocity = jumpSpeed;
             }
         }
 
+        // 방향 조정
+        Vector3 lookForward = new(cameraArm.forward.x, 0f, cameraArm.forward.z);
+        Vector3 lookRight = new(cameraArm.right.x, 0f, cameraArm.right.z);
+
+        Vector3 moveDirection = vertical * lookForward + horizontal * lookRight;
+
         yVelocity += (gravity * Time.deltaTime);
 
         moveDirection.y = yVelocity;
 
+        characterBody.forward = lookForward;
         characterController.Move(speed * Time.deltaTime * transform.TransformDirection(moveDirection));
     }
 
     void LookAround()
     {
         // https://makerejoicegames.tistory.com/131
-        // https://wergia.tistory.com/230
         mouseX += Input.GetAxis("Mouse X") * speed;
 
         mouseY += Input.GetAxis("Mouse Y") * speed;
