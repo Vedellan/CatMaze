@@ -2,32 +2,23 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-    private Transform characterBody;
-    [SerializeField]
-    private Transform cameraArm;
+    private Rigidbody rigid;
 
-    public float speed = 10f;
+    public float speed = 1000f;
     public float jumpSpeed = 10f;
-    CharacterController characterController;
-
-    float mouseX = 0;
-    float mouseY = 0;
-
-    public float gravity = -20f;
     public float yVelocity = 0;
     
     // 상/하/좌/우 순서, A: 97, Z: 122, 26개
     public int[] moveKeys;
 
+    public bool isGrounded = true;
+
     #region 값 할당
     void AssignObjects()
     {
-        characterController = GetComponent<CharacterController>();
-        moveKeys = new int[4] { 'w', 'a', 's', 'd' };
+        rigid = GetComponent<Rigidbody>();
 
-        characterBody = transform.GetChild(0);
-        cameraArm = transform.GetChild(1);
+        moveKeys = new int[4] { 'w', 'a', 's', 'd' };
     }
     #endregion 값 할당
 
@@ -40,7 +31,27 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Move();
-        LookAround();
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Ground"))
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                yVelocity = jumpSpeed;
+            }
+        }
+    }
+
+
+    
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isGrounded = false;
+        }
     }
 
     #region 이동 및 회전
@@ -77,31 +88,25 @@ public class Player : MonoBehaviour
         }
 
         // 점프 로직
-        if (characterController.isGrounded)
+        if (isGrounded)
         {
             yVelocity = 0;
 
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 yVelocity = jumpSpeed;
             }
         }
 
-        // 방향 조정
-        Vector3 lookForward = new(cameraArm.forward.x, 0f, cameraArm.forward.z);
-        Vector3 lookRight = new(cameraArm.right.x, 0f, cameraArm.right.z);
-
-        Vector3 moveDirection = vertical * lookForward + horizontal * lookRight;
-
-        yVelocity += (gravity * Time.deltaTime);
+        Vector3 moveDirection = vertical * Vector3.forward + horizontal * Vector3.right;
 
         moveDirection.y = yVelocity;
 
-        characterBody.forward = lookForward;
-        characterController.Move(speed * Time.deltaTime * transform.TransformDirection(moveDirection));
+        //transform.Translate(speed * Time.deltaTime * moveDirection);
+        rigid.AddForce(speed * Time.deltaTime * moveDirection);
     }
 
-    void LookAround()
+/*    void LookAround()
     {
         // https://makerejoicegames.tistory.com/131
         mouseX += Input.GetAxis("Mouse X") * speed;
@@ -110,7 +115,7 @@ public class Player : MonoBehaviour
         mouseY = Mathf.Clamp(mouseY, -55.0f, 55.0f);
 
         cameraArm.transform.localEulerAngles = new(-mouseY, mouseX, 0);
-    }
+    }*/
 #endregion 이동 및 회전
 
     void MakeRandomMoveKeys()
