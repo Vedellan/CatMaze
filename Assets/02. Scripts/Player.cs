@@ -107,7 +107,6 @@ public class Player : MonoBehaviour
         mouseY = Mathf.Clamp(mouseY, -55.0f, 55.0f);
 
         cameraArm.transform.localEulerAngles = new(-mouseY, mouseX, 0);
-        characterBody.transform.localEulerAngles = new(0, mouseX, 0);
     }
 #endregion 이동 및 회전
 
