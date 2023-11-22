@@ -1,10 +1,12 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private Transform characterBody;
+    [SerializeField]
+    private Transform cameraArm;
+
     public float speed = 10f;
     public float jumpSpeed = 10f;
     CharacterController characterController;
@@ -14,7 +16,7 @@ public class Player : MonoBehaviour
 
     public float gravity = -20f;
     public float yVelocity = 0;
-
+    
     // 상/하/좌/우 순서, A: 97, Z: 122, 26개
     public int[] moveKeys;
 
@@ -23,6 +25,9 @@ public class Player : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
         moveKeys = new int[4] { 'w', 'a', 's', 'd' };
+
+        characterBody = transform.GetChild(0);
+        cameraArm = transform.GetChild(1);
     }
     #endregion 값 할당
 
@@ -35,9 +40,10 @@ public class Player : MonoBehaviour
     private void Update()
     {
         Move();
-        Rotate();
+        LookAround();
     }
 
+    #region 이동 및 회전
     void Move()
     {
         // https://acredev.tistory.com/18
@@ -69,7 +75,10 @@ public class Player : MonoBehaviour
             vertical += 1;
         }
 
-        Vector3 moveDirection = new(horizontal, 0, vertical);
+        Vector3 lookForward = new(cameraArm.forward.x, 0f, cameraArm.forward.z);
+        Vector3 lookRight = new(cameraArm.right.x, 0f, cameraArm.right.z);
+
+        Vector3 moveDirection = vertical * lookForward + horizontal * lookRight;
 
         if (characterController.isGrounded)
         {
@@ -88,31 +97,32 @@ public class Player : MonoBehaviour
         characterController.Move(speed * Time.deltaTime * transform.TransformDirection(moveDirection));
     }
 
-    void Rotate()
+    void LookAround()
     {
-        // transform.Rotate(0f, Input.GetAxis("Mouse X") * speed, 0f, Space.World);
-        // transform.Rotate(Mathf.Clamp(-Input.GetAxis("Mouse Y") * speed, -55.0f, 55.0f), 0f, 0f);
         // https://makerejoicegames.tistory.com/131
+        // https://wergia.tistory.com/230
         mouseX += Input.GetAxis("Mouse X") * speed;
 
         mouseY += Input.GetAxis("Mouse Y") * speed;
         mouseY = Mathf.Clamp(mouseY, -55.0f, 55.0f);
 
-        transform.localEulerAngles = new(-mouseY, mouseX, 0);
+        cameraArm.transform.localEulerAngles = new(-mouseY, mouseX, 0);
+        characterBody.transform.localEulerAngles = new(0, mouseX, 0);
     }
+#endregion 이동 및 회전
 
     void MakeRandomMoveKeys()
     {
-        for(int i = 0; i < moveKeys.Length; i++)
+        for(int i = 0; i < moveKeys.Length; ++i)
         {
             moveKeys[i] = Random.Range(97, 122);
 
-            for(int j = 0; j < i; j++)
+            for(int j = 0; j < i; ++j)
             {
                 // 중복된 키가 할당된 경우
                 if (moveKeys[i] == moveKeys[j])
                 {
-                    i--;
+                    --i;
                     break;
                 }
             }
