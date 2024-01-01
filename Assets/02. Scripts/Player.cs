@@ -1,17 +1,20 @@
 using UnityEngine;
+using static UnityEditor.Searcher.SearcherWindow.Alignment;
 
 public class Player : MonoBehaviour
 {
     private Rigidbody rigid;
 
-    public float speed = 1000f;
-    public float jumpSpeed = 10f;
-    public float yVelocity = 0;
-    
+    public float speed = 10f;
+    public float jumpSpeed = 5f;
+    public float rotSpeed = 10f;
+
+    public Vector3 dir = Vector3.zero;
+
+    public LayerMask groundLayer;
+
     // 상/하/좌/우 순서, A: 97, Z: 122, 26개
     public int[] moveKeys;
-
-    public bool isGrounded = true;
 
     #region 값 할당
     void AssignObjects()
@@ -19,6 +22,7 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
 
         moveKeys = new int[4] { 'w', 'a', 's', 'd' };
+        groundLayer = LayerMask.GetMask("Ground");
     }
     #endregion 값 할당
 
@@ -33,89 +37,53 @@ public class Player : MonoBehaviour
         Move();
     }
 
-    private void OnCollisionStay(Collision collision)
-    {
-        if(collision.gameObject.CompareTag("Ground"))
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                yVelocity = jumpSpeed;
-            }
-        }
-    }
-
-
-    
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            isGrounded = false;
-        }
-    }
-
     #region 이동 및 회전
     void Move()
     {
-        // https://acredev.tistory.com/18
-        // https://wergia.tistory.com/230
-        float horizontal = 0;
-        float vertical = 0;
+        dir = Vector3.zero;
 
         // 위쪽 이동 (W)
-        if (Input.GetKey((KeyCode)moveKeys[0]))
-        {
-            Debug.Log((KeyCode)moveKeys[0]);
-            vertical += 1;
-        }
+        if (Input.GetKey((KeyCode)moveKeys[0])) { dir.z += 1; }
         // 아래쪽 이동 (S)
-        if (Input.GetKey((KeyCode)moveKeys[2]))
-        {
-            Debug.Log((KeyCode)moveKeys[1]);
-            vertical -= 1;
-        }
+        if (Input.GetKey((KeyCode)moveKeys[2])) { dir.z -= 1; }
         // 왼쪽 이동 (A)
-        if (Input.GetKey((KeyCode)moveKeys[1]))
-        {
-            Debug.Log((KeyCode)moveKeys[2]);
-            horizontal -= 1;
-        }
+        if (Input.GetKey((KeyCode)moveKeys[1])) { dir.x -= 1; }
         // 오른쪽 이동 (D)
-        if (Input.GetKey((KeyCode)moveKeys[3]))
-        {
-            Debug.Log((KeyCode)moveKeys[3]);
-            horizontal += 1;
-        }
+        if (Input.GetKey((KeyCode)moveKeys[3])) { dir.x += 1; }
 
         // 점프 로직
-        if (isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && CheckGround())
         {
-            yVelocity = 0;
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                yVelocity = jumpSpeed;
-            }
+            rigid.AddForce(Vector3.up * jumpSpeed, ForceMode.VelocityChange);
         }
 
-        Vector3 moveDirection = vertical * Vector3.forward + horizontal * Vector3.right;
+        dir.Normalize();
 
-        moveDirection.y = yVelocity;
-
-        //transform.Translate(speed * Time.deltaTime * moveDirection);
-        rigid.AddForce(speed * Time.deltaTime * moveDirection);
+        // 회전
+        if (dir != Vector3.zero)
+        {
+            transform.forward = dir;
+        }
     }
 
-/*    void LookAround()
+    bool CheckGround()
     {
-        // https://makerejoicegames.tistory.com/131
-        mouseX += Input.GetAxis("Mouse X") * speed;
+        RaycastHit hit;
 
-        mouseY += Input.GetAxis("Mouse Y") * speed;
-        mouseY = Mathf.Clamp(mouseY, -55.0f, 55.0f);
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.2f), Vector3.down, out hit, 0.4f, groundLayer))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-        cameraArm.transform.localEulerAngles = new(-mouseY, mouseX, 0);
-    }*/
+    private void FixedUpdate()
+    {
+        rigid.MovePosition(transform.position + dir * speed * Time.deltaTime);
+    }
 #endregion 이동 및 회전
 
     void MakeRandomMoveKeys()
