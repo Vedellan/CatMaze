@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 607837505}
   - component: {fileID: 607837509}
   - component: {fileID: 607837510}
+  - component: {fileID: 607837511}
   - component: {fileID: 607837506}
   m_Layer: 0
   m_Name: Cat
@@ -221,6 +222,9 @@ MonoBehaviour:
   rotSpeed: 10
   dir: {x: 0, y: 0, z: 0}
   groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  wallLayer:
     serializedVersion: 2
     m_Bits: 0
   moveKeys: 
@@ -268,10 +272,33 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.25, y: 0.9, z: 0.85}
   m_Center: {x: 0, y: 0.5, z: 0.03}
+--- !u!136 &607837511
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607837501}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.45
+  m_Height: 0.5
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.5, z: 0.02}
 --- !u!1 &776243929
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,7 +333,7 @@ MonoBehaviour:
   RandomSeed: 3
   Floor: {fileID: 165842, guid: 8d3b36f175a633f429d7bda54c76550d, type: 3}
   Wall: {fileID: 144206, guid: 9de82ec743bb24449a99f5cf1e325d61, type: 3}
-  Pillar: {fileID: 142476, guid: f3f97a2401feba4479a301d6181e9da6, type: 3}
+  Pillar: {fileID: 0}
   Rows: 15
   Columns: 15
   CellWidth: 4

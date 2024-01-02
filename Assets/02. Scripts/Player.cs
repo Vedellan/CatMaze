@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     public Vector3 dir = Vector3.zero;
 
     public LayerMask groundLayer;
+    public LayerMask wallLayer;
 
     // 상/하/좌/우 순서, A: 97, Z: 122, 26개
     public int[] moveKeys;
@@ -23,21 +24,27 @@ public class Player : MonoBehaviour
 
         moveKeys = new int[4] { 'w', 'a', 's', 'd' };
         groundLayer = LayerMask.GetMask("Ground");
+        wallLayer = LayerMask.GetMask("Wall");
     }
     #endregion 값 할당
 
     private void Awake()
     {
         AssignObjects();
-        //MakeRandomMoveKeys();
+        MakeRandomMoveKeys();
     }
 
     private void Update()
     {
         Move();
     }
+    private void FixedUpdate()
+    {
+        CheckWall();
+        rigid.MovePosition(transform.position + dir * speed * Time.deltaTime);
+    }
 
-    #region 이동 및 회전
+#region 이동 및 회전
     void Move()
     {
         dir = Vector3.zero;
@@ -80,10 +87,20 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    void CheckWall()
     {
-        rigid.MovePosition(transform.position + dir * speed * Time.deltaTime);
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position + (Vector3.up * 0.5f), dir, out hit, 0.5f, wallLayer))
+        {
+            speed = 0;
+        }
+        else
+        {
+            speed = 10f;
+        }
     }
+
 #endregion 이동 및 회전
 
     void MakeRandomMoveKeys()
