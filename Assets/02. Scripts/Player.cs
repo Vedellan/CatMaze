@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
 
-        moveKeys = new int[4] { 'w', 'a', 's', 'd' };
+        moveKeys = new int[5] { 'w', 'a', 's', 'd', 'k' };
         groundLayer = LayerMask.GetMask("Ground");
         wallLayer = LayerMask.GetMask("Wall");
     }
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         AssignObjects();
-        MakeRandomMoveKeys();
+        MakeRandomKeys();
     }
 
     private void Update()
@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
         if (Input.GetKey((KeyCode)moveKeys[3])) { dir.x += 1; }
 
         // 점프 로직
-        if (Input.GetKeyDown(KeyCode.Space) && CheckGround())
+        if (Input.GetKeyDown((KeyCode)moveKeys[4]) && CheckGround())
         {
             rigid.AddForce(Vector3.up * jumpSpeed, ForceMode.VelocityChange);
         }
@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
 
 #endregion 이동 및 회전
 
-    void MakeRandomMoveKeys()
+    void MakeRandomKeys()
     {
         for(int i = 0; i < moveKeys.Length; ++i)
         {

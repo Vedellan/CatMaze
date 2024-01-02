@@ -826,6 +826,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: hurdle
       objectReference: {fileID: 0}
+    - target: {fileID: 112595924124351726, guid: d11f8edf7e0c73d40a3ff98f9f08e625,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1627918100309675057, guid: d11f8edf7e0c73d40a3ff98f9f08e625,
         type: 3}
       propertyPath: m_LocalPosition.x
