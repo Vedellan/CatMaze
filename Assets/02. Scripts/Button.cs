@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
+    public PauseManager pauseManager;
+
     private void Awake()
     {
         pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
@@ -18,8 +20,6 @@ public class Button : MonoBehaviour
 
 
     #region Pause
-    public PauseManager pauseManager;
-
     public void PauseGame()
     {
         pauseManager.PauseGame();
