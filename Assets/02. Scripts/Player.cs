@@ -1,3 +1,4 @@
+using DG.Tweening.Core.Easing;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,14 +15,18 @@ public class Player : MonoBehaviour
     public LayerMask wallLayer;
 
     // 상/하/좌/우 순서, A: 97, Z: 122, 26개
+    // 4방향키 + 점프키 + 일시정지키(타 게임의 esc)
     public int[] moveKeys;
+
+    public PauseManager pauseManager;
 
     #region 값 할당
     void AssignObjects()
     {
         rigid = GetComponent<Rigidbody>();
+        pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
 
-        moveKeys = new int[5] { 'w', 'a', 's', 'd', 'k' };
+        moveKeys = new int[6] { 'w', 'a', 's', 'd', 'j', 'p' };
         groundLayer = LayerMask.GetMask("Ground");
         wallLayer = LayerMask.GetMask("Wall");
     }
@@ -30,7 +35,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         AssignObjects();
-        MakeRandomKeys();
+        //MakeRandomKeys();
     }
 
     private void Update()
@@ -61,6 +66,12 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown((KeyCode)moveKeys[4]) && CheckGround())
         {
             rigid.AddForce(Vector3.up * jumpSpeed, ForceMode.VelocityChange);
+        }
+
+        // 일시정지 로직
+        if (Input.GetKeyDown((KeyCode)moveKeys[5]))
+        {
+            pauseManager.PauseGame();
         }
 
         dir.Normalize();
