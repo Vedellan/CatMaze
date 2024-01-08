@@ -19,12 +19,14 @@ public class Player : MonoBehaviour
     public int[] moveKeys;
 
     public PauseManager pauseManager;
+    public GameManager gameManager;
 
     #region 값 할당
     void AssignObjects()
     {
         rigid = GetComponent<Rigidbody>();
         pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 
         moveKeys = new int[6] { 'w', 'a', 's', 'd', 'j', 'p' };
         groundLayer = LayerMask.GetMask("Ground");
@@ -47,8 +49,23 @@ public class Player : MonoBehaviour
         CheckWall();
         rigid.MovePosition(transform.position + dir * speed * Time.deltaTime);
     }
+    #region 물리 계산
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Enemy"))
+        {
+            gameManager.GameOver();
+        }
 
-#region 이동 및 회전
+
+        if (other.CompareTag("Finish"))
+        {
+            gameManager.GameClear();
+        }
+    }
+    #endregion 물리 계산
+
+    #region 이동 및 회전
     void Move()
     {
         dir = Vector3.zero;
