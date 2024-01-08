@@ -1,5 +1,6 @@
 using DG.Tweening.Core.Easing;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -25,8 +26,12 @@ public class Player : MonoBehaviour
     void AssignObjects()
     {
         rigid = GetComponent<Rigidbody>();
-        pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        if(SceneManager.GetActiveScene().name == "Stage1")
+        {
+            pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
 
         moveKeys = new int[6] { 'w', 'a', 's', 'd', 'j', 'p' };
         groundLayer = LayerMask.GetMask("Ground");

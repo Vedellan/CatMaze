@@ -8,10 +8,13 @@ public class SceneLoader : Singleton<SceneLoader>
 {
     [SerializeField]
     private string loadSceneName;
-    float fadeTime = 2f;
+    float fadeTime = 1f;
     private GameObject fadeObject;
     private GameObject loadingUI;
     private Image progressBar;
+    private RectTransform catTransform;
+    private Vector3 startPoint = new(-831, 136, 0);
+    private Vector3 endPoint = new(888, 136, 0);
     
     [SerializeField]
     private Image fadeBG;
@@ -30,7 +33,8 @@ public class SceneLoader : Singleton<SceneLoader>
         fadeObject = transform.GetChild(0).gameObject;
         fadeBG = fadeObject.GetComponent<Image>();
         loadingUI = transform.GetChild(1).gameObject;
-        progressBar = loadingUI.transform.GetChild(1).GetComponent<Image>();
+        progressBar = loadingUI.transform.GetChild(0).GetComponent<Image>();
+        catTransform = progressBar.transform.GetChild(0).GetComponent<RectTransform>();
     }
 
     public void LoadScene(string sceneName)
@@ -55,6 +59,7 @@ public class SceneLoader : Singleton<SceneLoader>
             yield return null;
             timer += Time.unscaledDeltaTime;
             progressBar.fillAmount = operation.progress;
+            catTransform.anchoredPosition = Vector3.Lerp(startPoint, endPoint, operation.progress);
 
             if(timer < 1f)
             {
@@ -83,7 +88,7 @@ public class SceneLoader : Singleton<SceneLoader>
         fadeObject.SetActive(true);
         loadingUI.SetActive(false);
 
-        fadeBG.color = new(0, 0, 0, 1);
+        fadeBG.color = new(1, 1, 1, 1);
 
         var tween = fadeBG.DOFade(0.0f, seconds);
         yield return tween.WaitForCompletion();
@@ -95,7 +100,7 @@ public class SceneLoader : Singleton<SceneLoader>
     {
         fadeObject.SetActive(true);
 
-        fadeBG.color = new(0, 0, 0, 0);
+        fadeBG.color = new(1, 1, 1, 0);
 
         var tween = fadeBG.DOFade(1.0f, seconds);
         yield return tween.WaitForCompletion();

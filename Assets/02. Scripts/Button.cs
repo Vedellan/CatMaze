@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Button : MonoBehaviour
 {
@@ -8,7 +7,10 @@ public class Button : MonoBehaviour
 
     private void Awake()
     {
-        pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
+        if (SceneManager.GetActiveScene().name == "Stage1")
+        {
+            pauseManager = GameObject.Find("Pause Manager").GetComponent<PauseManager>();
+        }
     }
 
     #region Load
