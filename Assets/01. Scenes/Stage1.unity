@@ -2180,6 +2180,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 336844675955520547, guid: d72a5e947fb435249b6c7429829ca3d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4384288194745331078, guid: d72a5e947fb435249b6c7429829ca3d3,
         type: 3}
       propertyPath: m_Pivot.x

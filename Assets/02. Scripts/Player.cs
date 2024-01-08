@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         AssignObjects();
-        //MakeRandomKeys();
+        MakeRandomKeys();
     }
 
     private void Update()
