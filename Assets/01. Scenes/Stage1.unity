@@ -916,7 +916,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1549,7 +1549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Algorithm: 1
   FullRandom: 1
-  RandomSeed: 3
+  RandomSeed: 12345
   Floor: {fileID: 2191339298695226945, guid: 3cd0ec1f38bc88944914f8d070fd21bc, type: 3}
   Wall: {fileID: 506830185755842910, guid: 2a2aa3a4d94bd094c887db9683ceb230, type: 3}
   Pillar: {fileID: 0}
@@ -3860,6 +3860,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cheese
+      objectReference: {fileID: 0}
+    - target: {fileID: 1730631393043715718, guid: ed2f020efcb96484089cd4694e11085e,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
