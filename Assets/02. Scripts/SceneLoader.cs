@@ -13,8 +13,8 @@ public class SceneLoader : Singleton<SceneLoader>
     private GameObject loadingUI;
     private Image progressBar;
     private RectTransform catTransform;
-    private Vector3 startPoint = new(-831, 136, 0);
-    private Vector3 endPoint = new(888, 136, 0);
+    private Vector3 startPoint = new(-888, 100, 0);
+    private Vector3 endPoint = new(888, 100, 0);
     
     [SerializeField]
     private Image fadeBG;

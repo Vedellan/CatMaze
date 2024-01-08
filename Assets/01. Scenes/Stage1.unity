@@ -2905,7 +2905,7 @@ GameObject:
   - component: {fileID: 1511467791}
   - component: {fileID: 1511467794}
   m_Layer: 5
-  m_Name: Resume Button
+  m_Name: Restart Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2977,7 +2977,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1511467794}
         m_TargetAssemblyTypeName: Button, Assembly-CSharp
-        m_MethodName: ResumeGame
+        m_MethodName: RestartGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

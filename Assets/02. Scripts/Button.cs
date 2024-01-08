@@ -16,7 +16,14 @@ public class Button : MonoBehaviour
     #region Load
     public void LoadScene(string sceneName)
     {
+        Time.timeScale = 1f;
         SceneLoader.Instance.LoadScene(sceneName);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     #endregion Load
 
