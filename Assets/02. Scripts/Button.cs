@@ -25,10 +25,19 @@ public class Button : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-    #endregion Load
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
+#endregion Load
 
 
-    #region Pause
+#region Pause
     public void PauseGame()
     {
         pauseManager.PauseGame();
@@ -38,5 +47,5 @@ public class Button : MonoBehaviour
     {
         pauseManager.ResumeGame();
     }
-    #endregion Pause
+#endregion Pause
 }
