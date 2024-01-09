@@ -22,10 +22,14 @@ public class Player : MonoBehaviour
     public PauseManager pauseManager;
     public GameManager gameManager;
 
+    public Animator animator;
+    bool isWalk = false;
+
     #region °ª ÇÒ´ç
     void AssignObjects()
     {
         rigid = GetComponent<Rigidbody>();
+        animator = transform.GetChild(0).GetComponent<Animator>();
 
         if(SceneManager.GetActiveScene().name == "Stage1")
         {
@@ -102,7 +106,14 @@ public class Player : MonoBehaviour
         if (dir != Vector3.zero)
         {
             transform.forward = dir;
+            isWalk = true;
         }
+        else
+        {
+            isWalk = false;
+        }
+
+        animator.SetBool("isWalk", isWalk);
     }
 
     bool CheckGround()
