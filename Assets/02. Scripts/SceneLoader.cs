@@ -23,6 +23,8 @@ public class SceneLoader : Singleton<SceneLoader>
     {
         base.Awake();
 
+        Application.targetFrameRate = 60;
+
         AssignObjects();
         fadeObject.SetActive(false);
         loadingUI.SetActive(false);
